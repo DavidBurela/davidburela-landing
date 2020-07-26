@@ -41,10 +41,11 @@ jobs:
           ###### End of Repository/Build Configurations ######
 
       # deploy to IPFS and update cloudflare
-      - name: IPFS deploy
+      - name: install node
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: IPFS deploy
         run: npx ipfs-deploy _site/ -O -C -p infura -p pinata -d cloudflare
         env: 
           IPFS_DEPLOY_PINATA__API_KEY: ${{ secrets.IPFS_DEPLOY_PINATA__API_KEY }}
