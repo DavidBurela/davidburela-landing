@@ -40,6 +40,20 @@ jobs:
           app_artifact_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
+      # deploy to IPFS and update cloudflare
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: ls
+      - run: npx ipfs-deploy _site/ -O -C --siteDomain www.davidburela.com -p pinata -d cloudflare
+        env: 
+          IPFS_DEPLOY_PINATA__API_KEY: ${{ secrets.IPFS_DEPLOY_PINATA__API_KEY }}
+          IPFS_DEPLOY_PINATA__SECRET_API_KEY: ${{ secrets.IPFS_DEPLOY_PINATA__SECRET_API_KEY }}
+          IPFS_DEPLOY_CLOUDFLARE__API_TOKEN: ${{ secrets.IPFS_DEPLOY_CLOUDFLARE__API_TOKEN }}
+          IPFS_DEPLOY_CLOUDFLARE__ZONE: ${{ secrets.IPFS_DEPLOY_CLOUDFLARE__ZONE }}
+          IPFS_DEPLOY_CLOUDFLARE__RECORD: ${{ secrets.IPFS_DEPLOY_CLOUDFLARE__RECORD }}
+
+
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
